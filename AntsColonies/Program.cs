@@ -55,10 +55,9 @@ namespace AntsColonies
     */
     class Program
     {
-
         static void Main()
         {
-
+            Console.WriteLine("Hello, world");
         }
     }
 }
