@@ -1,7 +1,7 @@
-﻿namespace AntsColonies
+﻿namespace AntsColonies.Base.Events
 {
     interface IEventHandler//цепочка обязанностей...своеобразная, но пусть будет
     {
-        public void HandleEvent(IEvent e);
+        public bool HandleEvent(IEvent e);
     }
 }

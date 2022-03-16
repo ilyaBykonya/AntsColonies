@@ -1,5 +1,9 @@
-﻿using System;
+﻿using AntsColonies.Base.Locations;
+using AntsColonies.Base.Resources;
+using AntsColonies.Base.States;
+using AntsColonies.Base.Events;
 using System.Collections.Generic;
+using System;
 
 /*
  * Для синхронизации действий сутки разделены на 4 части:

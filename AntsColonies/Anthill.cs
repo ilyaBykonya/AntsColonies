@@ -1,17 +1,14 @@
-﻿using AntsColonies.Base.Locations;
+﻿using System.Collections.Generic;
 using AntsColonies.Base.Resources;
-using AntsColonies.Base.States;
-using AntsColonies.Base.Events;
-using AntsColonies.Base.Units.Queens;
-using AntsColonies.Base.Units;
-using System.Collections.Generic;
-using System;
 
 namespace AntsColonies.Base.Locations
 {
     class Anthill : IResourceStorage
     {
-        protected LinkedList<ResourceCell> ResourceStorage = new();
+        //public BaseAntQueen Queen { get; }
+        //public Anthill(BaseAntQueen queen) => Queen = queen;
+
+        protected LinkedList<ResourceCell> ResourceStorage;
         public void PutResource(Resource resource) => ResourceStorage.AddLast(new ResourceCell(resource));
         public Resource TakeCell(ResourceCode resource = (ResourceCode)15)
         {
@@ -23,7 +20,7 @@ namespace AntsColonies.Base.Locations
                     return cell.TakeResource(); ;
                 }
             }
-            throw new InvalidOperationException("Cannot take " + resource + " from this anthill");
+            return null;
         }
         //========================================================
     }

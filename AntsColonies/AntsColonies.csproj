@@ -6,8 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="TaskEntities\AntsColonies\RedAnts\" />
-    <Folder Include="TaskEntities\AntsColonies\GreenAnts\" />
+    <Compile Remove="Anthill.cs" />
+    <Compile Remove="ResourcesHeap.cs" />
   </ItemGroup>
 
 </Project>
