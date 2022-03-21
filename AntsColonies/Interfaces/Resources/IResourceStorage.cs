@@ -1,8 +1,12 @@
-﻿namespace AntsColonies.Base.Resources
+﻿using System.Collections.Generic;
+
+namespace AntsColonies.Interfaces
 {
-    interface IResourceStorage
+    interface IResourceStorage: IVoter
     {
-        public Resource TakeCell(ResourceCode resource = (ResourceCode)0xF);
-        public void PutResource(Resource resource);
+        public int CountOfResources { get; }
+
+        public Resource TakeResource(ResourceCode resource = (ResourceCode)0xF);
+        public bool PutResource(Resource resource);
     }
 }
