@@ -13,7 +13,6 @@ namespace AntsColonies.GreenAnts
         : base("Victory", 28, 9, heaps, notificator, new() { typeof(SimpleWarrior), typeof(SimpleAnomalyWarrior), typeof(AdvancedWorker), typeof(EliteWorker), typeof(SimpleSprinterWorker), typeof(YoungQueen) }, (1, 4), (2, 4))
         => StateMachine.CurrentState = new AntQueenLaysLarvaeState(this);
 
-        public override void Vote(IVoting voting) => StateMachine.Vote(voting);
         public override void Notify(INotification notification)
         {
             if (notification is LifeCycleNotification<BaseAntQueen>)
@@ -30,7 +29,7 @@ namespace AntsColonies.GreenAnts
             }
             else
             {
-                StateMachine.Notify(notification);
+                base.Notify(notification);
             }
         }
     }

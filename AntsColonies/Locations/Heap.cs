@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using System;
 using AntsColonies.Notifications;
 using AntsColonies.Interfaces;
 
@@ -33,6 +35,16 @@ namespace AntsColonies.Locations
                 {
                     return;
                 }
+            }
+            else if(notification is NightNotification)
+            {
+                Console.WriteLine("========Resource heap==========");
+                int branches = Resources.Count(resource => resource.Type == ResourceCode.Branch);
+                int leafs = Resources.Count(resource => resource.Type == ResourceCode.Leaf);
+                int stones = Resources.Count(resource => resource.Type == ResourceCode.Stone);
+                int dewdrop = Resources.Count(resource => resource.Type == ResourceCode.Dewdrop);
+                Console.WriteLine($"[{branches}, {leafs}, {stones}, {dewdrop}]");
+                Console.WriteLine("===============================");
             }
 
             foreach (var handler in Subhandlers)

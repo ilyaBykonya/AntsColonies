@@ -3,6 +3,7 @@ using AntsColonies.Notifications;
 using AntsColonies.Interfaces;
 using AntsColonies.Locations;
 using System.Reflection;
+using System.Linq;
 using System;
 
 
@@ -18,7 +19,9 @@ namespace AntsColonies.Units
             public virtual void Notify(INotification notification)
             {
                 if (notification is MorningNotification)
+                {
                     Queen.StateMachine.CurrentState = new AntQueenTakingCareLarvaeState(Queen);
+                }
             }
         }
         protected class AntQueenTakingCareLarvaeState : IState
@@ -47,6 +50,7 @@ namespace AntsColonies.Units
                     for(int i = 0; i < NumberOfLarvae; ++i)
                     {
                         var newUnit = (BaseUnit)Activator.CreateInstance(Queen.ChildrenTypes[generator.Next(Queen.ChildrenTypes.Count)], Queen);
+                        Queen.Children.Add(newUnit);
                         Console.WriteLine($"Queen born new unit [{Queen.UnitId}] => [{newUnit.UnitId}]");
                     }
                 }
@@ -75,5 +79,31 @@ namespace AntsColonies.Units
             GlobalNotificator.Notify(new QueenBanishedFromAnthill(this));
         }
         public abstract bool IsMyRelate(BaseAntQueen other);
+        public override void Notify(INotification notification)
+        {
+            if(notification is NightNotification)
+            {
+                Console.WriteLine("==================================================");
+                Console.WriteLine("Anthill");
+                Console.WriteLine($"\tQueen [{Name}] - [{UnitId}]");
+                Console.WriteLine($"\tResources: [{OwnAnthill.CountOfResources}]");
+                Console.WriteLine($"\tChildren: [{Children.Count}]");
+                Console.WriteLine($"\t\tWarriors: [{Children.Count(unit => unit is BaseWarrior)}]");
+                Console.WriteLine($"\t\tWorkers: [{Children.Count(unit => unit is BaseWorker)}]");
+                Console.WriteLine($"\t\tQueens: [{Children.Count(unit => unit is BaseAntQueen)}]");
+                Console.WriteLine("==================================================");
+            }
+            else if(notification is UnitDeathNotification)
+            {
+                var death = notification as UnitDeathNotification;
+                var hiking = (death.Unit as BaseHiking);
+                if (hiking != null)
+                {
+                    if (hiking.Queen == this)
+                        Children.Remove(hiking);
+                }
+            }
+            base.Notify(notification);
+        }
     }
 }

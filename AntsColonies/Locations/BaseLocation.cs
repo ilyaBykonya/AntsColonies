@@ -12,7 +12,7 @@ namespace AntsColonies.Locations
         public HashSet<BaseHiking> Units { get; } = new();
         public BaseLocation(LinkedList<Resource> resources) => Resources = resources;
 
-        private LinkedList<Resource> Resources { get; }
+        protected LinkedList<Resource> Resources { get; }
         public int CountOfResources => Resources.Count;
         public bool PutResource(Resource resource)
         {

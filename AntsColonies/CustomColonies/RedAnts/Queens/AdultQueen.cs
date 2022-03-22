@@ -13,7 +13,6 @@ namespace AntsColonies.RedAnts
         : base("Mary", 25, 9, heaps, notificator, new() { typeof(AdvancedWarrior), typeof(EliteSkinnyWarrior), typeof(LegendaryWarrior), typeof(EliteWorker), typeof(AdvancedWorker), typeof(AdvancedQueensPet), typeof(YoungQueen) }, (1, 4), (1, 3))
         => StateMachine.CurrentState = new AntQueenLaysLarvaeState(this);
 
-        public override void Vote(IVoting voting) => StateMachine.Vote(voting);
         public override void Notify(INotification notification)
         {
             if(notification is LifeCycleNotification<BaseAntQueen>)
@@ -22,16 +21,18 @@ namespace AntsColonies.RedAnts
                 var youngQueen = lifeCycleNotification.Unit as YoungQueen;
                 if (youngQueen == null)
                     return;
+                if (youngQueen.Parent == this)
+                {
 
-                if(lifeCycleNotification is QueenBanishedFromAnthill)
-                    Children.Add(youngQueen);
-                else if(lifeCycleNotification is QueenDeathNotification)
-                    Children.Remove(youngQueen);
+                    if (lifeCycleNotification is QueenBanishedFromAnthill)
+                        Children.Add(youngQueen);
+                    else if (lifeCycleNotification is QueenDeathNotification)
+                        Children.Remove(youngQueen);
+                }
             }
-            else
-            {
-                StateMachine.Notify(notification);
-            }
+
+            base.Notify(notification);
+            
         }
     }
 }

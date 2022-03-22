@@ -12,8 +12,5 @@ namespace AntsColonies.GreenAnts
         public YoungQueen(BaseAdultAntQueen parent)
         : base("Victory-child", 28, 9, new() { typeof(SimpleWarrior), typeof(SimpleAnomalyWarrior), typeof(AdvancedWorker), typeof(EliteWorker), typeof(SimpleSprinterWorker) }, parent)
         => StateMachine.CurrentState = new AntQueenLaysLarvaeState(this);
-
-        public override void Vote(IVoting voting) => StateMachine.Vote(voting);
-        public override void Notify(INotification notification) => StateMachine.Notify(notification);
     }
 }

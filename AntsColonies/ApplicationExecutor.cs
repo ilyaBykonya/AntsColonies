@@ -25,7 +25,19 @@ namespace AntsColonies
 
         public ApplicationExecutor()
         {
+            /*
+             Куча 1 ресурсы: веточка: 46; листик: 35; росинка: 42;
+             Куча 2 ресурсы: веточка: 33; камушек: 49; росинка: 20;
+             Куча 3 ресурсы: веточка: 36; листик: 23;
+             Куча 4 ресурсы: веточка: 22; листик: 32; росинка: 13;
+             Куча 5 ресурсы: веточка: 19; листик: 34; камушек: 35; росинка: 22;
+             */
             Heaps.Add(CreateHeap(46, 35, 0, 42));
+            Heaps.Add(CreateHeap(33, 0, 49, 20));
+            Heaps.Add(CreateHeap(36, 23, 0, 0));
+            Heaps.Add(CreateHeap(22, 32, 0, 13));
+            Heaps.Add(CreateHeap(19, 34, 35, 22));
+
             var redQueen = new RedAnts.AdultQueen(Heaps, this);
             var greenQueen = new GreenAnts.AdultQueen(Heaps, this);
             new RedAnts.Dragonfly(redQueen);
@@ -33,8 +45,10 @@ namespace AntsColonies
 
             foreach (var heap in Heaps)
                 Receivers.Add(heap);
+
+            Receivers.Add(new SongCicade.SongCicade(Heaps, DaysToDry));
         }
-        private Heap CreateHeap(int branches, int leafs, int stones, int drewdrops)
+        static private Heap CreateHeap(int branches, int leafs, int stones, int drewdrops)
         {
             LinkedList<Resource> startHeapStorage = new();
             for (int i = 0; i < branches; ++i)
@@ -77,29 +91,8 @@ namespace AntsColonies
         }
         public void PrintSimulatingResult()
         {
-            foreach(var queen in Queens)
-            {
-                Console.WriteLine("==================================================");
-                Console.WriteLine("Anthill");
-                Console.WriteLine($"\tQueen [{queen.Name}] - [{queen.UnitId}]");
-                Console.WriteLine($"\tResources: [{queen.OwnAnthill.CountOfResources}]");
-                Console.WriteLine($"\tUnits: [{queen.OwnAnthill.Units.Count}]");
-                Console.WriteLine($"\t\tWarriors: [{queen.OwnAnthill.Units.Count(unit => unit is BaseWarrior)}]");
-                Console.WriteLine($"\t\tWorkers: [{queen.OwnAnthill.Units.Count(unit => unit is BaseWorker)}]");
-                var adultQueen = queen as BaseAdultAntQueen;
-                if(adultQueen != null)
-                {
-                    Console.Write("\tChildren: ");
-                    foreach(var child in adultQueen.Children)
-                        Console.Write($"[{child.UnitId}]");
-                }
-
-                Console.WriteLine("\n==================================================");
-            }
-
-
             var winner = Queens.OrderByDescending(queen => queen.OwnAnthill.CountOfResources).First();
-            Console.WriteLine($"Winner: [{winner.Name}] - [{winner.UnitId}]");
+            Console.WriteLine($"Winner: [{winner.Name}] - [{winner.UnitId}] - [{winner.OwnAnthill.CountOfResources}]");
         }
 
         public void Notify(LifeCycleNotification<BaseAntQueen> notification)
@@ -154,6 +147,7 @@ namespace AntsColonies
                 Notify(notification as LifeCycleNotification<BaseUnit>);
             else if(notification is BattleStartNotification)
                 Notify(notification as BattleStartNotification);
+
 
             SendNotificationToAllReceivers(notification);
         }
