@@ -20,9 +20,8 @@ namespace AntsColonies
         static void Main()
         {
             Console.WriteLine("===============Start application==========");
-            ApplicationExecutor executor = new();
+            var executor = new ApplicationExecutor();
             executor.ExecuteSimulation();
-            executor.PrintSimulatingResult();
             Console.WriteLine("===============Finish application=========");
         }
     }

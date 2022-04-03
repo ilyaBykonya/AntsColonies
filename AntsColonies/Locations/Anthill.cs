@@ -1,48 +1,15 @@
-﻿using AntsColonies.Notifications;
-using AntsColonies.Interfaces;
+﻿using AntsColonies.Interfaces;
 
 namespace AntsColonies.Locations
 {
-    class Anthill : BaseLocation
+    sealed class AnthillFoundation : INotification
     {
-        public Anthill() : base(new()) { }
-
-        public override void Notify(INotification notification)
-        {
-            if(notification is UnitCameToAnthill) 
-            {
-                var resultNotify = notification as UnitCameToAnthill;
-                if (resultNotify.Target == this)
-                {
-                    Units.Add(resultNotify.Unit);
-                }
-                else
-                {
-                    return;
-                }
-            } 
-            else if(notification is UnitLeftAnthill)
-            {
-                var resultNotify = notification as UnitLeftAnthill;
-                if (resultNotify.Target == this)
-                {
-                    Units.Remove(resultNotify.Unit);
-                }
-                else
-                {
-                    return;
-                }
-            }
-
-            foreach (var handler in Subhandlers)
-                handler.Notify(notification);
-        }
-        public override void Vote(IVoting voting)
-        {
-            foreach (var unit in Units)
-                unit.Vote(voting);
-            foreach (var handler in Subhandlers)
-                handler.Vote(voting);
-        }
+        public Anthill Location { get; }
+        public AnthillFoundation(Anthill anthill) => Location = anthill;
+    }
+    class Anthill : Location
+    {
+        public Anthill(IEventHandler router)
+        : base(new(), router) => EventRouter.HandleEvent(new AnthillFoundation(this));
     }
 }
