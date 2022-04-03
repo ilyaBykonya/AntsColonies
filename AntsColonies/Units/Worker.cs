@@ -15,8 +15,8 @@ namespace AntsColonies.Units
         : base(info, queen)
         {
             Backpack = backpack;
-            InstallModifier(new PutResourcesToAnthillOnNight(this));
-            InstallModifier(new TakeResourcesFromHeapOnDay(this));
+            InstallModifier(new PutResourcesToAnthillOnNight(this, Backpack));
+            InstallModifier(new TakeResourcesFromHeapOnDay(this, Backpack));
         }
     }
 }

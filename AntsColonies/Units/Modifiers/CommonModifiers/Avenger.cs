@@ -4,9 +4,9 @@ using System;
 
 namespace AntsColonies.Units
 {
-    class ReduceHealthReceiver : BaseModifier<Unit, ReduceHealthNotification>
+    class Avenger : BaseModifier<Unit, ReduceHealthNotification>
     {
-        public ReduceHealthReceiver(Unit unit) : base(unit) { }
+        public Avenger(Unit unit) : base(unit) { }
         public override void HandleEvent(ReduceHealthNotification e)
         {
             if (e.Target != Unit)
@@ -16,9 +16,11 @@ namespace AntsColonies.Units
             if (Unit.UnitInfo.Health > 0)
                 return;
 
+            EventRouter.HandleEvent(new ReduceHealthNotification(e.Damager.UnitInfo.Health, Unit, e.Damager, e.Location));
             Unit.Location = null;
             EventRouter.UnsubscribeSubhandler(Unit);
             EventRouter.HandleEvent(new UnitDeathNotification(Unit));
         }
     }
 }
+

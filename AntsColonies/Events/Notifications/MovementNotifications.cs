@@ -19,11 +19,11 @@ namespace AntsColonies.Events
     sealed class UnitCameToLocation : MovementNotification
     {
         public UnitCameToLocation(Unit unit, Location target) : base(unit, target) { }
-        public override string ToString() => $"[Unit [{Unit.Id}] came to location <{ Target.ToString() }>]";
+        public override string ToString() => $"[Unit [{Unit.GetType().Name}][{Unit.Id}] came to location <{ Target.GetType().Name }>]";
     }
     sealed class UnitLeftLocation : MovementNotification
     {
         public UnitLeftLocation(Unit unit, Location target) : base(unit, target) { }
-        public override string ToString() => $"[Unit [{Unit.Id}] left location <{ Target.ToString() }>]";
+        public override string ToString() => $"[Unit [{Unit.GetType().Name}][{Unit.Id}] left location <{ Target.GetType().Name }>]";
     }
 }

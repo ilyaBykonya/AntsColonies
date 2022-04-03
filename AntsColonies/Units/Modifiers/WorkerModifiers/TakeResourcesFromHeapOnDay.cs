@@ -5,15 +5,16 @@ using AntsColonies.Events;
 namespace AntsColonies.Units
 {
     class TakeResourcesFromHeapOnDay :
-        BaseModifier<Worker, DayNotification>,
+        BaseModifier<Unit, DayNotification>,
         IEventHandler<DayNotification>
     {
         private Heap Heap => Unit.Location as Heap;
-        public TakeResourcesFromHeapOnDay(Worker unit) : base(unit) { }
+        private WorkerBackpack Backpack { get; }
+        public TakeResourcesFromHeapOnDay(Unit unit, WorkerBackpack backpack) : base(unit) => Backpack = backpack;
         public override void HandleEvent(DayNotification e)
         {
             if (Heap is not null)
-                new MoveResourcesBetweenStorages(Heap, Unit.Backpack, Unit.EventRouter).Execute();
+                new MoveResourcesBetweenStorages(Heap, Backpack, Unit.EventRouter).Execute();
         }
     }
 }

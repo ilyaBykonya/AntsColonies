@@ -17,7 +17,6 @@ namespace AntsColonies.Colonies.SongCicade
             {
                 Owner = owner;
                 Days = new Random().Next(days - 2);
-                Owner.EventRouter.HandleEvent(new SubscribeActor(Owner));
             }
 
             public void HandleEvent(IEvent e)
@@ -42,7 +41,7 @@ namespace AntsColonies.Colonies.SongCicade
             {
                 Owner = owner;
                 Heap = Owner.Simulation.Heaps.ElementAt(new Random().Next(Owner.Simulation.Heaps.Count));
-                Heap?.SubscribeSubhandler(this);
+                Heap?.SubscribeSubhandler(Owner);
             }
 
             public void HandleEvent(IEvent e)
@@ -68,7 +67,7 @@ namespace AntsColonies.Colonies.SongCicade
                 if (Days-- > 0)
                     return;
 
-                Heap?.UnsubscribeSubhandler(this);
+                Heap?.UnsubscribeSubhandler(Owner);
                 Owner.StateMachine = new SongCicadeDeath(Owner);
             }
         }
@@ -78,7 +77,7 @@ namespace AntsColonies.Colonies.SongCicade
             public SongCicadeDeath(SongCicade owner)
             {
                 Owner = owner;
-                Owner.EventRouter.HandleEvent(new UnsubscribeActor(Owner));
+                Owner.EventRouter.UnsubscribeSubhandler(Owner);
             }
             public void HandleEvent(IEvent e) { } 
         }

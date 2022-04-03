@@ -17,7 +17,7 @@ namespace AntsColonies.Units
                 return;
 
             var targets = new GetCountOfTargetsQuestion(Unit).AskQuestion();
-            var enemy = new GetAttackTargetsQuestion(Unit).AskQuestion().GetEnumerator();
+            var enemy = new GetAttackTargetsQuestion(Unit).AskQuestion().ToList().GetEnumerator();
             for (int hitIndex = 0; hitIndex < targets && enemy.MoveNext(); ++hitIndex)
                 if (new FightProcessAction(Unit.Location, Unit, enemy.Current, EventRouter).Execute() == false)
                     --hitIndex;

@@ -1,16 +1,18 @@
 ﻿using AntsColonies.Interfaces;
 using AntsColonies.Events;
+using System.Linq;
 using System;
 
 namespace AntsColonies.Units
 {
-    class ReduceHealthReceiver : BaseModifier<Unit, ReduceHealthNotification>
+    class Invulnerable : BaseModifier<Hiking, ReduceHealthNotification>
     {
-        public ReduceHealthReceiver(Unit unit) : base(unit) { }
+        public Invulnerable(Hiking unit) : base(unit) { }
         public override void HandleEvent(ReduceHealthNotification e)
         {
-            if (e.Target != Unit)
+            if (e.Target != Unit || e.Location == null || e.Damager is Warrior)
                 return;
+
 
             Unit.UnitInfo.Health -= e.Damage;
             if (Unit.UnitInfo.Health > 0)
@@ -22,3 +24,4 @@ namespace AntsColonies.Units
         }
     }
 }
+

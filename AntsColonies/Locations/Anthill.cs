@@ -2,14 +2,9 @@
 
 namespace AntsColonies.Locations
 {
-    sealed class AnthillFoundation : INotification
+    sealed class Anthill : Location
     {
-        public Anthill Location { get; }
-        public AnthillFoundation(Anthill anthill) => Location = anthill;
-    }
-    class Anthill : Location
-    {
-        public Anthill(IEventHandler router)
-        : base(new(), router) => EventRouter.HandleEvent(new AnthillFoundation(this));
+        public Anthill(IEventRouter router)
+        : base(new(), router) => EventRouter.HandleEvent(new LocationFoundation<Anthill>(this));
     }
 }

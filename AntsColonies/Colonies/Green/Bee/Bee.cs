@@ -6,17 +6,19 @@ using System.Collections.Generic;
 using System.Collections;
 using System;
 
-namespace AntsColonies.Units
+
+namespace AntsColonies.Colonies.Green
 {
-    record WarriorParameters(int CountOfHits, int CountOfTargets);
-    class Warrior : Hiking
+    class Bee : Hiking
     {
-        public Warrior((WarriorParameters, UnitInfo) info, Queen queen)
-        : base(info.Item2, queen)
+        public Bee(Queen queen) 
+        : base(new("<Green><Bee>", 24, 7, 9), queen)
         {
+            InstallModifier(new Avenger(this));
+            InstallModifier(new Invulnerable(this));
             InstallModifier(new StartFightOnDay(this));
-            InstallModifier(new GetCountOfTargets(this, info.Item1.CountOfTargets));
-            InstallModifier(new GetCountOfHits(this, info.Item1.CountOfHits));
+            InstallModifier(new GetCountOfTargets(this, 3));
+            InstallModifier(new GetCountOfHits(this, 3));
             InstallModifier(new GetDamage(this));
             InstallModifier(new GetStandardHit(this));
             InstallModifier(new GetStandardAttackTargets(this));

@@ -11,8 +11,8 @@ namespace AntsColonies.Events
         private bool? VotingResultValue;
         public bool? Result => VotingResultValue;
         public HashSet<IEventHandler> Voters { get; } = new();
-        public IEventHandler EventRouter{ get; }
-        public BaseAction(IEventHandler router) => EventRouter = router;
+        public IEventRouter EventRouter{ get; }
+        public BaseAction(IEventRouter router) => EventRouter = router;
 
         public virtual bool Execute()
         {
@@ -26,7 +26,7 @@ namespace AntsColonies.Events
         {
             VotingResultValue = true;
             foreach (var voter in Voters)
-                voter.HandleEvent(this);
+                voter?.HandleEvent(this);
 
             return Result.Value;
         }

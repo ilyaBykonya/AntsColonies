@@ -7,9 +7,9 @@ using System;
 
 namespace AntsColonies.Units
 {
-    sealed class GetStandardAttackTargets : BaseModifier<Warrior, GetAttackTargetsQuestion>
+    sealed class GetStandardAttackTargets : BaseModifier<Hiking, GetAttackTargetsQuestion>
     {
-        public GetStandardAttackTargets(Warrior unit) : base(unit) { }
+        public GetStandardAttackTargets(Hiking unit) : base(unit) { }
         public override void HandleEvent(GetAttackTargetsQuestion e)
         {
             if (e.Answerer == Unit)

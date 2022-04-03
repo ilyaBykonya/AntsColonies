@@ -10,7 +10,7 @@ namespace AntsColonies.Events
     {
         private IResourceStorage Source { get; }
         private IResourceStorage Destination { get; }
-        public MoveResourcesBetweenStorages(IResourceStorage source, IResourceStorage destination, IEventHandler router)
+        public MoveResourcesBetweenStorages(IResourceStorage source, IResourceStorage destination, IEventRouter router)
         :base(router)
         {
             Voters.Add(Destination = destination);
@@ -18,7 +18,7 @@ namespace AntsColonies.Events
         }
         public override void Action()
         {
-            Console.WriteLine($"[Move resource from <{Source}> to <{Destination}>]");
+            Console.WriteLine($"[Move resource from <{Source.GetType().Name}> to <{Destination.GetType().Name}>]");
             foreach (var required in Destination.RequiredResources)
             {
                 for (int index = 0; index < required.Value; ++index)

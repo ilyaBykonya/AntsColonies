@@ -21,11 +21,16 @@ namespace AntsColonies.Events
                 Target = target;
             }
         }
-
+    
     class ReduceHealthNotification : FightNotification<Unit, Unit>
     {
         public int Damage { get; }
         public ReduceHealthNotification(int damage, Unit damager, Unit target, Location location)
         : base(damager, target, location) => Damage = damage;
+    }
+    class RedirectDamageNotification : ReduceHealthNotification
+    {
+        public RedirectDamageNotification(int damage, Unit damager, Unit target, Location location) 
+        : base(damage, damager, target, location) { }
     }
 }

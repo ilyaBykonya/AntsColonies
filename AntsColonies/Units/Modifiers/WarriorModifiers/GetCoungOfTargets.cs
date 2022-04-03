@@ -12,13 +12,14 @@ namespace AntsColonies.Units
     {
         public GetCountOfTargetsQuestion(IEventHandler answerer) : base(answerer) { }
     }
-    sealed class GetCountOfTargets : BaseModifier<Warrior, GetCountOfTargetsQuestion>
+    sealed class GetCountOfTargets : BaseModifier<Unit, GetCountOfTargetsQuestion>
     {
-        public GetCountOfTargets(Warrior unit) : base(unit) { }
+        private int CountOfTargets { get; }
+        public GetCountOfTargets(Unit unit, int targets) : base(unit) => CountOfTargets = targets;
         public override void HandleEvent(GetCountOfTargetsQuestion e)
         {
             if (e.Answerer == Unit)
-                e.Answer = Unit.WarriorInfo.CountOfTargets;
+                e.Answer = CountOfTargets;
         }
     }
 }

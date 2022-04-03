@@ -13,7 +13,6 @@
 
   <ItemGroup>
     <Folder Include="Units\Modifiers\WorkerModifiers\" />
-    <Folder Include="Units\Modifiers\OtherModifiers\" />
   </ItemGroup>
 
 </Project>

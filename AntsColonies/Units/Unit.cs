@@ -26,9 +26,6 @@ namespace AntsColonies.Units
     abstract class Unit : SimulationActor
     {
         //==========================================
-        private static int GlobalUnitId = 0;
-        public int Id { get; } = ++GlobalUnitId;
-        //==========================================
         private Location LocationValue;
         public Location Location
         {
@@ -41,7 +38,6 @@ namespace AntsColonies.Units
             }
         }
         //==========================================
-        private Dictionary<Guid, IModifier> Modifiers { get; } = new();
         public UnitInfo UnitInfo { get; }
         //==========================================
 
@@ -53,12 +49,29 @@ namespace AntsColonies.Units
             InstallModifier(new ReduceHealthReceiver(this));
             EventRouter.HandleEvent(new UnitBornedNotification(this));
         }
-        public sealed override void HandleEvent(IEvent e) => Modifiers.GetValueOrDefault(e.GetType().GUID)?.HandleEvent(e);
-        public void UninstallModifier(Guid id) => Modifiers.Remove(id);
+        private Dictionary<Guid, IModifier> Modifiers { get; } = new();
         public void InstallModifier(IModifier modifier)
         {
-            if (Modifiers.TryAdd(modifier.EventGuid, modifier) == false)
+            if (Modifiers.ContainsKey(modifier.EventGuid))
+            {
+                UnsubscribeSubhandler(Modifiers[modifier.EventGuid]);
                 Modifiers[modifier.EventGuid] = modifier;
+            }
+            else
+            {
+                Modifiers.Add(modifier.EventGuid, modifier);
+            }
+
+            SubscribeSubhandler(modifier);
+        }
+        public void UninstallModifier(Guid id)
+        {
+            var modifier = Modifiers.GetValueOrDefault(id);
+            if(modifier is not null)
+            {
+                UnsubscribeSubhandler(modifier);
+                Modifiers.Remove(id);
+            }
         }
     }
 }

@@ -5,15 +5,16 @@ using AntsColonies.Events;
 namespace AntsColonies.Units
 {
     class PutResourcesToAnthillOnNight :
-        BaseModifier<Worker, NightNotification>,
+        BaseModifier<Unit, NightNotification>,
         IEventHandler<NightNotification>
     {
         private Anthill Anthill => Unit.Location as Anthill;
-        public PutResourcesToAnthillOnNight(Worker unit) : base(unit) { }
+        private WorkerBackpack Backpack { get; }
+        public PutResourcesToAnthillOnNight(Unit unit, WorkerBackpack backpack) : base(unit) => Backpack = backpack;
         public override void HandleEvent(NightNotification e)
         {
             if (Anthill is not null)
-                new MoveResourcesBetweenStorages(Unit.Backpack, Anthill, Unit.EventRouter).Execute();
+                new MoveResourcesBetweenStorages(Backpack, Anthill, Unit.EventRouter).Execute();
         }
     }
 }

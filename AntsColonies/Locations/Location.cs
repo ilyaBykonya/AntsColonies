@@ -2,20 +2,20 @@
 using AntsColonies.Interfaces;
 using AntsColonies.Events;
 using AntsColonies.Units;
-using System.Collections;
 using System.Linq;
 using System;
 
 namespace AntsColonies.Locations
 {
-    sealed class LocationFoundation : INotification
+    sealed class LocationFoundation<LocationType> : INotification where LocationType: Location
     {
-        public Location Location { get; }
-        public LocationFoundation(Location location) => Location = location;
+        public LocationType Location { get; }
+        public LocationFoundation(LocationType location) => Location = location;
     }
     abstract class Location :
         ISimulationParticipant,
         IResourceStorage,
+        IEventRouter,
         IEventHandler<UnitCameToLocation>,
         IEventHandler<UnitLeftLocation>,
         IEventHandler<NightNotification>
@@ -23,10 +23,10 @@ namespace AntsColonies.Locations
         protected List<Unit> UnitsList = new();
         public IReadOnlyCollection<Unit> Units => UnitsList;
 
-        protected List<IEventHandler> SubhandlersList { get; set; } = new();
-        public IReadOnlyCollection<IEventHandler> Subhandlers => SubhandlersList;
-        public void SubscribeSubhandler(IEventHandler handler) => SubhandlersList.Add(handler);
-        public void UnsubscribeSubhandler(IEventHandler handler) => SubhandlersList.Remove(handler);
+        protected StandardEventRouter Router { get; } = new();
+        public IReadOnlyCollection<IEventHandler> Subhandlers => Router.Subhandlers;
+        public void SubscribeSubhandler(IEventHandler handler) => Router.SubscribeSubhandler(handler);
+        public void UnsubscribeSubhandler(IEventHandler handler) => Router.UnsubscribeSubhandler(handler);
 
         protected LinkedList<Resource> ResourcesList = new();
         public IReadOnlyCollection<Resource> Resources => ResourcesList;
@@ -51,14 +51,14 @@ namespace AntsColonies.Locations
             return true;
         }
 
-        public IEventHandler EventRouter { get; }
-        public Location(LinkedList<Resource> resources, IEventHandler router)
+        public IEventRouter EventRouter { get; }
+        public Location(LinkedList<Resource> resources, IEventRouter router)
         {
             EventRouter = router;
             ResourcesList = resources;
-            EventRouter.HandleEvent(new LocationFoundation(this));
+            EventRouter.HandleEvent(new LocationFoundation<Location>(this));
         }
-        
+
         public virtual void HandleEvent(IEvent e)
         {
             if (e is UnitCameToLocation)
@@ -68,10 +68,7 @@ namespace AntsColonies.Locations
             if (e is NightNotification)
                 HandleEvent(e as NightNotification);
 
-            var buffer = new IEventHandler[SubhandlersList.Count];
-            SubhandlersList.CopyTo(buffer);
-            foreach (var handler in buffer)
-                handler.HandleEvent(e);
+            Router.HandleEvent(e);
         }
         public void HandleEvent(UnitCameToLocation e)
         {

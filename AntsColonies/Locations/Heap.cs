@@ -3,14 +3,9 @@ using AntsColonies.Interfaces;
 
 namespace AntsColonies.Locations
 {
-    sealed class HeapFoundation : INotification
+    sealed class Heap: Location
     {
-        public Heap Location { get; }
-        public HeapFoundation(Heap heap) => Location = heap;
-    }
-    class Heap: Location
-    {
-        public Heap(LinkedList<Resource> resources, IEventHandler router)
-        : base(resources, router) => EventRouter.HandleEvent(new HeapFoundation(this));
+        public Heap(LinkedList<Resource> resources, IEventRouter router)
+        : base(resources, router) => EventRouter.HandleEvent(new LocationFoundation<Heap>(this));
     }
 }

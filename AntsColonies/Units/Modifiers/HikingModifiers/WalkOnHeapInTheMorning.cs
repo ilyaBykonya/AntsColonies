@@ -13,7 +13,8 @@ namespace AntsColonies.Units
         public override void HandleEvent(MorningNotification e)
         {
             var no_empty_heaps = Unit.Simulation.Heaps.Where(heap => heap.Resources.Count != 0);
-            Unit.Location = no_empty_heaps.ElementAt(new Random().Next(no_empty_heaps.Count()));
+            if(no_empty_heaps.Count() > 0)
+                Unit.Location = no_empty_heaps.ElementAt(new Random().Next(no_empty_heaps.Count()));
         }
     }
 }

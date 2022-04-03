@@ -23,6 +23,7 @@ namespace AntsColonies
             var executor = new ApplicationExecutor();
             executor.ExecuteSimulation();
             Console.WriteLine("===============Finish application=========");
+            executor.PrintSimulationState();
         }
     }
 }

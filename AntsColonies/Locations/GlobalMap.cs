@@ -2,14 +2,9 @@
 
 namespace AntsColonies.Locations
 {
-    sealed class GlobalMapFoundation : INotification
+    sealed class GlobalMap : Location
     {
-        public GlobalMap Location { get; }
-        public GlobalMapFoundation(GlobalMap map) => Location = map;
-    }
-    class GlobalMap : Location
-    {
-        public GlobalMap(IEventHandler router)
-        : base(new(), router) => EventRouter.HandleEvent(new GlobalMapFoundation(this));
+        public GlobalMap(IEventRouter router)
+        : base(new(), router) => EventRouter.HandleEvent(new LocationFoundation<GlobalMap>(this));
     }
 }

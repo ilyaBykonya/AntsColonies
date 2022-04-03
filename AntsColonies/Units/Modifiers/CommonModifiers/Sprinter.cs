@@ -5,22 +5,29 @@ using System;
 
 namespace AntsColonies.Units
 {
-    class Sprinter : ISimulationParticipant, IModifier
+    class Sprinter :
+        BaseModifier<Unit, FightProcessAction>,
+        IEventHandler<ReduceHealthNotification>,
+        IEventHandler<UnitCameToLocation>
     {
-        public Sprinter(Unit unit) { }
+        private bool EnabledForAttack = false;
+        public Sprinter(Unit unit) : base(unit) { }
 
-        public Guid EventGuid => typeof(Sprinter).GUID;
-
-        public IEventHandler EventRouter => throw new NotImplementedException();
-
-        public void HandleEvent(FightProcessAction e)
+        public void HandleEvent(ReduceHealthNotification e)
         {
-            throw new NotImplementedException();
+            if (e.Location == Unit.Location) EnabledForAttack = false;
         }
-
-        public void HandleEvent(IEvent e)
+        public void HandleEvent(UnitCameToLocation e)
         {
-            throw new NotImplementedException();
+            if (e.Unit == Unit) EnabledForAttack = false;
+        }
+        public override void HandleEvent(FightProcessAction e)
+        {
+            if (e.Target == Unit && EnabledForAttack == false)
+            {
+                Console.WriteLine($"[Reject damage from [{e.Damager.Id}] to [{Unit.Id}]]");
+                e.Reject();
+            }
         }
     }
 }

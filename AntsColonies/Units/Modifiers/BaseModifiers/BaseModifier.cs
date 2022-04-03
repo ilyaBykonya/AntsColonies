@@ -9,7 +9,7 @@ namespace AntsColonies.Units
         where UnitType : Unit
         where EventType : class, IEvent
     {
-        public IEventHandler EventRouter => Unit.EventRouter;
+        public IEventRouter EventRouter => Unit.EventRouter;
         public Guid EventGuid => typeof(EventType).GUID;
         public UnitType Unit { get; }
 

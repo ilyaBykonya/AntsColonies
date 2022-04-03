@@ -13,7 +13,7 @@ namespace AntsColonies.Colonies.Green
         public SprinterWorker(Queen queen)
         : base(new(ResourceCode.Leaf), new("<Simple><Sprinter><Green><Worker>", 1, 0, 0), queen) 
         {
-
+            InstallModifier(new Sprinter(this));
         }
     }
 }

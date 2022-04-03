@@ -9,18 +9,32 @@ using System;
 namespace AntsColonies
 {
     class ApplicationExecutor : 
-        IEventHandler, 
-        IEventHandler<LocationFoundation>,
-        IEventHandler<SubscribeActor>,
-        IEventHandler<UnsubscribeActor>
+        IEventRouter, IEventHandler<LocationFoundation<Location>>
     {
         private int DaysToDry { get; } = 12;
         private Simulation Simulation { get; }
-        private HashSet<IEventHandler> Subhandlers { get; } = new();
+
+        private StandardEventRouter Router { get; } = new();
+        public IReadOnlyCollection<IEventHandler> Subhandlers => Router.Subhandlers;
+        public void SubscribeSubhandler(IEventHandler handler) => Router.SubscribeSubhandler(handler);
+        public void UnsubscribeSubhandler(IEventHandler handler) => Router.UnsubscribeSubhandler(handler);
+
+        public void HandleEvent(IEvent e)
+        {
+            Console.WriteLine($"Event handled: {e}");
+            if (e is LocationFoundation<Location>)
+                HandleEvent(e as LocationFoundation<Location>);
+
+            Router.HandleEvent(e);
+        }
+        public void HandleEvent(LocationFoundation<Location> e) => SubscribeSubhandler(e.Location);
+
+
+
 
         public ApplicationExecutor()
         {
-            Subhandlers.Add(Simulation = new(new GlobalMap(this), this));
+            Router.SubscribeSubhandler(Simulation = new(new GlobalMap(this), this));
 
             Heap CreateHeap(int branches, int leafs, int stones, int drewdrops)
             {
@@ -37,13 +51,16 @@ namespace AntsColonies
                 return new(startHeapStorage, this);
             }
             CreateHeap(46, 35, 0, 42);
-            //CreateHeap(33, 0, 49, 20);
-            //CreateHeap(36, 23, 0, 0);
-            //CreateHeap(22, 32, 0, 13);
-            //CreateHeap(19, 34, 35, 22);
+            CreateHeap(33, 0, 49, 20);
+            CreateHeap(36, 23, 0, 0);
+            CreateHeap(22, 32, 0, 13);
+            CreateHeap(19, 34, 35, 22);
 
             new Colonies.SongCicade.SongCicade(DaysToDry, Simulation);
-            new Colonies.Green.AdultGreenQueen(Simulation);
+            var green_queen = new Colonies.Green.AdultGreenQueen(Simulation);
+            var red_queen = new Colonies.Red.AdultGreenQueen(Simulation);
+            new Colonies.Green.Bee(green_queen);
+            new Colonies.Red.Dragonfly(red_queen);
         }
         public void ExecuteSimulation()
         {
@@ -94,21 +111,5 @@ namespace AntsColonies
                 Console.WriteLine("[No winner queen]");
             }
         }
-
-        public void HandleEvent(IEvent e)
-        {
-            Console.WriteLine($"Event handled: {e}");
-            if (e is LocationFoundation)
-                HandleEvent(e as LocationFoundation);
-            if (e is SubscribeActor)
-                HandleEvent(e as SubscribeActor);
-            if (e is UnsubscribeActor)
-                HandleEvent(e as UnsubscribeActor);
-
-            Subhandlers.ToList().ForEach(location => location.HandleEvent(e));
-        }
-        public void HandleEvent(LocationFoundation e) => Subhandlers.Add(e.Location);
-        public void HandleEvent(SubscribeActor e) => Subhandlers.Add(e.Actor);
-        public void HandleEvent(UnsubscribeActor e) => Subhandlers.Remove(e.Actor);
     }
 }

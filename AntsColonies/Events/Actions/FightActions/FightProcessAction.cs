@@ -11,7 +11,7 @@ namespace AntsColonies.Events
         public Location Location { get; }
         public Unit Damager { get; }
         public Unit Target { get; }
-        public BaseFightAction(Location location, Unit damager, Unit target, IEventHandler router)
+        public BaseFightAction(Location location, Unit damager, Unit target, IEventRouter router)
         : base(router)
         {
             Voters.Add(Location = location);
@@ -22,7 +22,7 @@ namespace AntsColonies.Events
 
     class FightProcessAction : BaseFightAction
     {
-        public FightProcessAction(Location location, Unit damager, Unit target, IEventHandler router) 
+        public FightProcessAction(Location location, Unit damager, Unit target, IEventRouter router) 
         : base(location, damager, target, router) { }
 
         public override void Action()
@@ -47,7 +47,7 @@ namespace AntsColonies.Events
     class StandardHitAction : BaseFightAction
     {
         public int Damage { get; }
-        public StandardHitAction(int damage, Location location, Unit damager, Unit target, IEventHandler router)
+        public StandardHitAction(int damage, Location location, Unit damager, Unit target, IEventRouter router)
         : base(location, damager, target, router) => Damage = damage;
 
         public override void Action()
@@ -58,7 +58,7 @@ namespace AntsColonies.Events
     class FightMultiAction : BaseFightAction
     {
         public List<BaseFightAction> Hits { get; } = new();
-        public FightMultiAction(Location location, Unit damager, Unit target, IEventHandler router)
+        public FightMultiAction(Location location, Unit damager, Unit target, IEventRouter router)
         : base(location, damager, target, router) { }
 
         public override void Action() => Hits.ForEach(hit => hit?.Execute());

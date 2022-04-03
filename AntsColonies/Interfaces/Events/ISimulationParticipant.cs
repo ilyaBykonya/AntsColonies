@@ -2,6 +2,6 @@
 {
     interface ISimulationParticipant
     {
-        public IEventHandler EventRouter { get; }
+        public IEventRouter EventRouter { get; }
     }
 }
