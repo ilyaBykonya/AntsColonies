@@ -28,10 +28,7 @@ namespace AntsColonies
             Router.HandleEvent(e);
         }
         public void HandleEvent(LocationFoundation<Location> e) => SubscribeSubhandler(e.Location);
-
-
-
-
+    
         public ApplicationExecutor()
         {
             Router.SubscribeSubhandler(Simulation = new(new GlobalMap(this), this));
@@ -56,11 +53,38 @@ namespace AntsColonies
             CreateHeap(22, 32, 0, 13);
             CreateHeap(19, 34, 35, 22);
 
+            CreateRedColony();
+            CreateGreenColony();
             new Colonies.SongCicade.SongCicade(DaysToDry, Simulation);
-            var green_queen = new Colonies.Green.AdultGreenQueen(Simulation);
-            var red_queen = new Colonies.Red.AdultGreenQueen(Simulation);
-            new Colonies.Green.Bee(green_queen);
-            new Colonies.Red.Dragonfly(red_queen);
+        }
+
+        private Queen CreateGreenColony()
+        {
+            var queen = new Colonies.Green.AdultGreenQueen(Simulation);
+            new Colonies.Green.Bee(queen);
+            CreateColony(queen, 19, 8);
+            return queen;
+        }
+        private Queen CreateRedColony()
+        {
+            var queen = new Colonies.Red.AdultRedQueen(Simulation);
+            new Colonies.Red.Dragonfly(queen);
+            CreateColony(queen, 13, 7);
+            return queen;
+        }
+        private void CreateColony(Queen queen, int workers, int warriors)
+        {
+            var warriors_types = queen.QueenParameters.ChildrenTypes.Where(type => type.IsSubclassOf(typeof(Warrior)));
+            var workers_types = queen.QueenParameters.ChildrenTypes.Where(type => type.IsSubclassOf(typeof(Worker)));
+
+            Random generator = new();
+            if(warriors_types.Count() > 0)
+                for(int i = 0; i < warriors; ++i)
+                    queen.QueenInfo.Children.Add((Warrior)Activator.CreateInstance(warriors_types.ElementAt(generator.Next(warriors_types.Count())), queen));
+                
+            if (workers_types.Count() > 0)
+                for (int i = 0; i < workers; ++i)
+                    queen.QueenInfo.Children.Add((Worker)Activator.CreateInstance(workers_types.ElementAt(generator.Next(workers_types.Count())), queen));
         }
         public void ExecuteSimulation()
         {

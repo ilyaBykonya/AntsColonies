@@ -4,9 +4,11 @@ namespace AntsColonies.Interfaces
 {
     abstract class SimulationActor : ISimulationParticipant, IEventRouter
     {
-        private static int GlobalUnitId = 0;
+        private static int GlobalUnitId = 0;//Все актёры индексируются
         public int Id { get; } = ++GlobalUnitId;
 
+        //Simulation - класс, содержащий информацию о симуляции:
+        //списки куч и королев, ссылку на глобальную карту.
         public Simulation Simulation { get; }
         public IEventRouter EventRouter => Simulation.EventRouter;
 

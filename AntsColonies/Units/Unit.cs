@@ -26,6 +26,8 @@ namespace AntsColonies.Units
     abstract class Unit : SimulationActor
     {
         //==========================================
+        //Таким образом достаточно написать “Location = new_loc;”, 
+        //чтобы «уйти» со старой локации и «прийти» на новую
         private Location LocationValue;
         public Location Location
         {

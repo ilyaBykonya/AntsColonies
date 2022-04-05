@@ -28,7 +28,7 @@ namespace AntsColonies.Units
             Random generator = new();
             for (int i = 0; i < CountOfLarvae; ++i)
             {
-                
+                //Создание юнита королевой
                 var newUnit = (Unit)Activator.CreateInstance(Unit.QueenParameters.ChildrenTypes.ElementAt(generator.Next(Unit.QueenParameters.ChildrenTypes.Count)), Unit);
                 Console.WriteLine($"Queen born new unit [{Unit.Id}] => [{newUnit.Id}]");
                 Unit.QueenInfo.Children.Add(newUnit);

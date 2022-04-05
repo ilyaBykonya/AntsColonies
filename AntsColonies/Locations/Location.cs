@@ -7,6 +7,7 @@ using System;
 
 namespace AntsColonies.Locations
 {
+    //LocationFoundation<T> – уведомление о создании локации определённого типа
     sealed class LocationFoundation<LocationType> : INotification where LocationType: Location
     {
         public LocationType Location { get; }
@@ -30,6 +31,8 @@ namespace AntsColonies.Locations
 
         protected LinkedList<Resource> ResourcesList = new();
         public IReadOnlyCollection<Resource> Resources => ResourcesList;
+        //На локацию можно положить любой ресурс, поэтому
+        //ей необходим ресурс любого типа в максимальном количестве
         public List<KeyValuePair<ResourceCode, int>> RequiredResources => new() { new((ResourceCode)15, int.MaxValue) };
         public Resource TakeResource(ResourceCode resource = (ResourceCode)15)
         {
@@ -70,6 +73,9 @@ namespace AntsColonies.Locations
 
             Router.HandleEvent(e);
         }
+
+        //UnitCameToLocation и UnitLeftLocation - события,
+        //высылаемые при перехлодах юнитов между локациями
         public void HandleEvent(UnitCameToLocation e)
         {
             if (e.Target == this)

@@ -39,7 +39,7 @@ namespace AntsColonies.Interfaces
         public int CountOfResources => Cells.Count(cell => cell.HasResource);
         public IEnumerable<ResourceCode> Types => Cells.Select(cell => cell.ValidResources);
         public IReadOnlyCollection<Resource> Resources => Cells.Where(cell => cell.HasResource).Select(cell => cell.Resource).ToList();
-        public List<KeyValuePair<ResourceCode, int>> RequiredResources 
+        public List<KeyValuePair<ResourceCode, int>> RequiredResources
         {
             get
             {
